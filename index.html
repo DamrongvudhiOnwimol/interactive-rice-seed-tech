@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เทคโนโลยีเมล็ดพันธุ์ข้าวหลังการเก็บเกี่ยว | Kasetsart University</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Earthy Wisdom -->
+    <!-- Application Structure Plan: The application is designed as a thematic, single-page scrolling experience rather than a linear slide deck. This structure allows users to freely explore key concepts at their own pace. It starts with a high-level introduction, moves to fundamental principles (Seed vs. Grain), then dives into a detailed, interactive step-by-step exploration of the postharvest process, followed by quality control and future trends. This non-linear, thematic approach enhances usability by grouping related information and using interactive elements to reveal complexity, making it more engaging and effective for learning compared to passively clicking through slides. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Physiological Maturation Graph -> Goal: Explain the optimal harvest time visually -> Viz/Method: Interactive Line Chart (Chart.js) -> Interaction: Hovering over points reveals data (vigor, moisture, dry weight), making the abstract concept tangible. Justification: A dynamic chart is more effective than a static image for showing relationships over time.
+        - Report Info: Harrington's Rule -> Goal: Demonstrate the relationship between moisture/temp and shelf life -> Viz/Method: HTML Sliders with JS calculation -> Interaction: Users manipulate sliders and see the shelf-life multiplier change in real-time. Justification: Turns a static rule into an interactive experiment, improving retention.
+        - Report Info: Cleaning/Grading Process -> Goal: Detail a multi-step mechanical process -> Viz/Method: Clickable HTML/CSS flowchart -> Interaction: Clicking a stage opens a modal with details. Justification: Breaks down a complex process into digestible parts, preventing information overload.
+        - Report Info: Postharvest Loss Stats -> Goal: Inform and create impact -> Viz/Method: Large "Key Figure" text blocks. Justification: Highlights critical data immediately.
+        - All choices confirm to the NO SVG/Mermaid rule, using Canvas for charts and structured HTML/CSS for diagrams. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: #FDFBF8;
+            color: #44403c;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .sticky-nav {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        .scroll-margin {
+            scroll-margin-top: 80px;
+        }
+        .modal {
+            transition: opacity 0.3s ease;
+        }
+        .process-step {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .process-step:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800">
+
+    <header class="bg-green-800 text-white text-center py-12 px-4">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-4xl md:text-5xl font-bold mb-2">เทคโนโลยีเมล็ดพันธุ์ข้าวหลังการเก็บเกี่ยว</h1>
+            <p class="text-lg text-green-200">คู่มือเชิงโต้ตอบสำหรับนิสิต คณะเกษตร มหาวิทยาลัยเกษตรศาสตร์</p>
+        </div>
+    </header>
+
+    <nav class="sticky-nav bg-white/80 backdrop-blur-md shadow-md">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-center space-x-2 md:space-x-8 py-4 overflow-x-auto">
+                <a href="#intro" class="nav-link text-sm md:text-base font-medium text-stone-600 hover:text-green-700 transition">บทนำ</a>
+                <a href="#fundamentals" class="nav-link text-sm md:text-base font-medium text-stone-600 hover:text-green-700 transition">หลักการพื้นฐาน</a>
+                <a href="#process" class="nav-link text-sm md:text-base font-medium text-stone-600 hover:text-green-700 transition">กระบวนการหลัก</a>
+                <a href="#quality" class="nav-link text-sm md:text-base font-medium text-stone-600 hover:text-green-700 transition">การควบคุมคุณภาพ</a>
+                <a href="#future" class="nav-link text-sm md:text-base font-medium text-stone-600 hover:text-green-700 transition">แนวโน้มอนาคต</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto p-4 md:p-8">
+
+        <section id="intro" class="scroll-margin text-center mb-16">
+            <h2 class="text-3xl font-bold text-green-800 mb-4">ทำไมเทคโนโลยีหลังการเก็บเกี่ยวจึงสำคัญ?</h2>
+            <p class="max-w-3xl mx-auto text-lg text-stone-700 mb-8">คุณภาพของเมล็ดพันธุ์ถูกสร้างขึ้นในแปลงเพาะปลูก แต่จะถูกรักษาไว้ได้ด้วยเทคโนโลยีหลังการเก็บเกี่ยวที่ถูกต้องเท่านั้น การจัดการที่ดีคือหัวใจสำคัญในการรักษาศักยภาพทางพันธุกรรมของเมล็ดพันธุ์ให้คงอยู่จนถึงมือเกษตรกร ซึ่งเป็นจุดเริ่มต้นของความมั่นคงทางอาหาร</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-amber-100/50 p-6 rounded-lg border border-amber-200">
+                    <h3 class="text-5xl font-bold text-amber-600">10-30%</h3>
+                    <p class="text-stone-700 mt-2">คือเปอร์เซ็นต์ความสูญเสียของผลผลิตทั่วโลกหลังการเก็บเกี่ยว</p>
+                </div>
+                <div class="bg-green-100/50 p-6 rounded-lg border border-green-200">
+                    <h3 class="text-2xl font-semibold text-green-800">"สะพานเชื่อมระหว่างฤดูปลูก"</h3>
+                    <p class="text-stone-700 mt-2">คือคำจำกัดความของเมล็ดพันธุ์ที่มีชีวิต การจัดการที่ดีทำให้สะพานนี้แข็งแรง</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="fundamentals" class="scroll-margin mb-16">
+            <h2 class="text-3xl font-bold text-green-800 mb-6 text-center">หลักการพื้นฐาน: Seed vs. Grain</h2>
+            <p class="max-w-3xl mx-auto text-lg text-stone-700 mb-8 text-center">แม้จะมีลักษณะภายนอกคล้ายกัน แต่ "เมล็ดพันธุ์" และ "เมล็ดพืชเพื่อบริโภค" มีวัตถุประสงค์และต้องการการจัดการที่แตกต่างกันโดยสิ้นเชิง การเข้าใจความแตกต่างนี้เป็นพื้นฐานที่สำคัญที่สุด</p>
+            <div class="overflow-x-auto bg-white p-6 rounded-lg shadow-md">
+                <table class="w-full min-w-max text-left">
+                    <thead>
+                        <tr class="border-b border-stone-200">
+                            <th class="p-4 bg-stone-50 text-stone-600 font-semibold">คุณลักษณะ</th>
+                            <th class="p-4 bg-green-50 text-green-800 font-semibold">เมล็ดพันธุ์ (Seed)</th>
+                            <th class="p-4 bg-amber-50 text-amber-800 font-semibold">เมล็ดพืช (Grain)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b border-stone-200">
+                            <td class="p-4 font-medium">วัตถุประสงค์หลัก</td>
+                            <td class="p-4">🌱 การขยายพันธุ์</td>
+                            <td class="p-4">🍚 การบริโภค</td>
+                        </tr>
+                        <tr class="border-b border-stone-200">
+                            <td class="p-4 font-medium">สิ่งที่สำคัญที่สุด</td>
+                            <td class="p-4">คัพภะ (Embryo) ที่มีชีวิต</td>
+                            <td class="p-4">เอนโดสเปิร์ม (Endosperm)</td>
+                        </tr>
+                        <tr class="border-b border-stone-200">
+                            <td class="p-4 font-medium">ดัชนีชี้วัดคุณภาพ</td>
+                            <td class="p-4">ความงอก, ความแข็งแรง</td>
+                            <td class="p-4">คุณภาพการหุงต้ม, รสชาติ</td>
+                        </tr>
+                        <tr>
+                            <td class="p-4 font-medium">การจัดการ</td>
+                            <td class="p-4">ละเอียดอ่อน, ป้องกันการกระแทก</td>
+                            <td class="p-4">เน้นประสิทธิภาพในการแปรรูป</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="process" class="scroll-margin mb-16">
+            <h2 class="text-3xl font-bold text-green-800 mb-6 text-center">กระบวนการหลักหลังการเก็บเกี่ยว</h2>
+            <p class="max-w-3xl mx-auto text-lg text-stone-700 mb-12 text-center">ทุกขั้นตอนนับตั้งแต่การเก็บเกี่ยวจนถึงการเก็บรักษามีความสำคัญอย่างยิ่งต่อคุณภาพและอายุขัยของเมล็ดพันธุ์ ลองสำรวจแต่ละขั้นตอนเพื่อทำความเข้าใจในรายละเอียด</p>
+
+            <div class="space-y-12">
+                <div class="p-8 bg-white rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-semibold text-green-800 mb-4">ขั้นตอนที่ 1: การเจริญเต็มที่และการเก็บเกี่ยว</h3>
+                    <p class="mb-6 text-stone-700">การตัดสินใจเก็บเกี่ยวในเวลาที่เหมาะสมคือจุดที่สำคัญที่สุด "ระยะเจริญเต็มที่ทางสรีรวิทยา" (Physiological Maturity) คือช่วงเวลาที่เมล็ดมีความงอกและความแข็งแรงสูงสุด</p>
+                    <div class="chart-container">
+                        <canvas id="maturityChart"></canvas>
+                    </div>
+                    <div class="mt-4 text-center text-sm text-stone-500">
+                        <p>นำเมาส์ไปวางบนกราฟเพื่อดูความสัมพันธ์ระหว่างปัจจัยต่างๆ</p>
+                    </div>
+                </div>
+
+                <div class="p-8 bg-white rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-semibold text-green-800 mb-4">ขั้นตอนที่ 2: การลดความชื้น</h3>
+                     <p class="mb-6 text-stone-700">เป้าหมายคือการลดความชื้นลงเหลือ ≤ 12% เพื่อชะลอการหายใจของเมล็ดและยืดอายุการเก็บรักษา อุณหภูมิที่ใช้ต้องไม่สูงเกินไป (ไม่เกิน 43°C) เพื่อป้องกันความเสียหายต่อคัพภะ</p>
+                     <div class="bg-amber-50 p-6 rounded-lg border border-amber-200">
+                        <h4 class="font-semibold text-amber-800">ทดลอง "กฎทองของ Harrington"</h4>
+                        <p class="text-sm text-amber-700 mb-4">ทุกๆ การลดความชื้น 1% หรือลดอุณหภูมิ 5°C จะยืดอายุเมล็ดพันธุ์ได้ 2 เท่า</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                            <div>
+                                <label for="moistureSlider" class="block mb-2 text-sm font-medium">ลดความชื้นลง (%): <span id="moistureValue">1</span>%</label>
+                                <input id="moistureSlider" type="range" min="0" max="5" value="1" step="1" class="w-full h-2 bg-amber-200 rounded-lg appearance-none cursor-pointer">
+                            </div>
+                            <div>
+                                <label for="tempSlider" class="block mb-2 text-sm font-medium">ลดอุณหภูมิลง (°C): <span id="tempValue">5</span>°C</label>
+                                <input id="tempSlider" type="range" min="0" max="20" value="5" step="5" class="w-full h-2 bg-amber-200 rounded-lg appearance-none cursor-pointer">
+                            </div>
+                        </div>
+                        <div class="mt-4 text-center">
+                            <p class="text-lg">อายุการเก็บรักษาจะเพิ่มขึ้นประมาณ: <span id="shelfLifeResult" class="font-bold text-2xl text-amber-600">4</span> เท่า</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="p-8 bg-white rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-semibold text-green-800 mb-4">ขั้นตอนที่ 3: การทำความสะอาดและคัดแยก</h3>
+                    <p class="mb-8 text-stone-700">กระบวนการนี้มีเป้าหมายเพื่อเพิ่มความบริสุทธิ์ทางกายภาพและคัดเฉพาะเมล็ดที่สมบูรณ์ที่สุด โดยใช้เครื่องจักรหลายชนิดทำงานร่วมกัน คลิกที่แต่ละขั้นตอนเพื่อดูรายละเอียด</p>
+                    <div class="flex flex-col md:flex-row items-center justify-center gap-4 text-center">
+                        <div class="process-step bg-stone-100 p-4 rounded-lg cursor-pointer w-full md:w-48" onclick="showModal('precleaner')">
+                            <div class="text-4xl mb-2">🌪️</div>
+                            <h4 class="font-semibold">ทำความสะอาดเบื้องต้น</h4>
+                            <p class="text-sm text-stone-600">กำจัดสิ่งเจือปนชิ้นใหญ่</p>
+                        </div>
+                        <div class="text-2xl text-stone-400 font-bold hidden md:block">→</div>
+                        <div class="process-step bg-stone-100 p-4 rounded-lg cursor-pointer w-full md:w-48" onclick="showModal('airscreen')">
+                             <div class="text-4xl mb-2">💨</div>
+                            <h4 class="font-semibold">ลมและตะแกรง</h4>
+                             <p class="text-sm text-stone-600">แยกตามน้ำหนักและขนาด</p>
+                        </div>
+                        <div class="text-2xl text-stone-400 font-bold hidden md:block">→</div>
+                        <div class="process-step bg-stone-100 p-4 rounded-lg cursor-pointer w-full md:w-48" onclick="showModal('gravity')">
+                             <div class="text-4xl mb-2">⚖️</div>
+                            <h4 class="font-semibold">คัดแยกตามความถ่วงจำเพาะ</h4>
+                             <p class="text-sm text-stone-600">แยกเมล็ดหนัก-เบา</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="quality" class="scroll-margin mb-16">
+            <h2 class="text-3xl font-bold text-green-800 mb-6 text-center">การทดสอบและควบคุมคุณภาพ</h2>
+            <p class="max-w-3xl mx-auto text-lg text-stone-700 mb-8 text-center">"ถ้าคุณวัดผลไม่ได้ คุณก็จัดการมันไม่ได้" การทดสอบคุณภาพเป็นขั้นตอนที่ขาดไม่ได้เพื่อยืนยันว่าเมล็ดพันธุ์ที่ผลิตได้มีศักยภาพตามมาตรฐาน</p>
+            <div class="space-y-4">
+                <div class="accordion-item bg-white rounded-lg shadow-md">
+                    <button class="accordion-header w-full text-left p-4 font-semibold text-lg flex justify-between items-center">
+                        <span>การวิเคราะห์ความบริสุทธิ์ (Purity Analysis)</span>
+                        <span class="accordion-icon text-green-700 text-2xl">+</span>
+                    </button>
+                    <div class="accordion-content max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-4 pt-0 text-stone-700">เป็นการตรวจสอบองค์ประกอบของตัวอย่างเมล็ดพันธุ์ เพื่อหาเปอร์เซ็นต์ของเมล็ดพันธุ์บริสุทธิ์, เมล็ดพืชชนิดอื่น, เมล็ดวัชพืช และสิ่งเจือปนต่างๆ</p>
+                    </div>
+                </div>
+                 <div class="accordion-item bg-white rounded-lg shadow-md">
+                    <button class="accordion-header w-full text-left p-4 font-semibold text-lg flex justify-between items-center">
+                        <span>การทดสอบความงอก (Germination Test)</span>
+                        <span class="accordion-icon text-green-700 text-2xl">+</span>
+                    </button>
+                    <div class="accordion-content max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-4 pt-0 text-stone-700">ประเมินศักยภาพสูงสุดในการงอกของเมล็ดพันธุ์ภายใต้สภาวะที่เหมาะสมในห้องปฏิบัติการ (เช่น อุณหภูมิ, ความชื้น, แสง) ผลลัพธ์จะถูกรายงานเป็นเปอร์เซ็นต์ความงอก</p>
+                    </div>
+                </div>
+                 <div class="accordion-item bg-white rounded-lg shadow-md">
+                    <button class="accordion-header w-full text-left p-4 font-semibold text-lg flex justify-between items-center">
+                        <span>การทดสอบความแข็งแรง (Vigor Test)</span>
+                        <span class="accordion-icon text-green-700 text-2xl">+</span>
+                    </button>
+                    <div class="accordion-content max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-4 pt-0 text-stone-700">ทำนายความสามารถของเมล็ดในการงอกและตั้งตัวได้ดีในสภาพไร่ที่ไม่เอื้ออำนวย ซึ่งเป็นสภาวะที่เกษตรกรต้องเผชิญจริง มีหลายวิธี เช่น Accelerated Aging Test หรือ Cold Test</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="future" class="scroll-margin">
+            <h2 class="text-3xl font-bold text-green-800 mb-6 text-center">สรุปและแนวโน้มในอนาคต</h2>
+            <p class="max-w-3xl mx-auto text-lg text-stone-700 mb-8 text-center">เทคโนโลยีเมล็ดพันธุ์มีการพัฒนาอย่างต่อเนื่องเพื่อเพิ่มประสิทธิภาพและความแม่นยำในการรักษาคุณภาพเมล็ดพันธุ์ให้ดียิ่งขึ้น</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h4 class="font-semibold text-green-800 mb-2">Optical Sorting</h4>
+                    <p class="text-sm text-stone-600">เครื่องคัดแยกด้วยแสงที่สามารถคัดเมล็ดที่เปลี่ยนสีหรือเป็นโรคออกได้อย่างแม่นยำ</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h4 class="font-semibold text-green-800 mb-2">Sensor Technology</h4>
+                    <p class="text-sm text-stone-600">เซ็นเซอร์ที่ตรวจวัดความชื้นและอุณหภูมิในไซโลเก็บรักษาแบบเรียลไทม์ เพื่อการจัดการที่แม่นยำ</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h4 class="font-semibold text-green-800 mb-2">Seed Priming</h4>
+                    <p class="text-sm text-stone-600">เทคโนโลยีเตรียมความพร้อมให้เมล็ดงอกได้เร็วและสม่ำเสมอมากขึ้นเมื่อลงสู่แปลงปลูก</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h4 class="font-semibold text-green-800 mb-2">Data Analytics</h4>
+                    <p class="text-sm text-stone-600">การใช้ข้อมูลเพื่อทำนายอายุการเก็บรักษาและวางแผนการจัดการสต็อกเมล็ดพันธุ์อย่างมีประสิทธิภาพ</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-green-800 text-green-200 text-center py-6 mt-16">
+        <p>จัดทำโดย: นายดำรงวุฒิ อ่อนวิมล</p>
+        <p class="text-sm">ภาควิชาพืชไร่นา คณะเกษตร มหาวิทยาลัยเกษตรศาสตร์</p>
+    </footer>
+
+    <div id="modal-backdrop" class="modal fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none" onclick="closeModal()">
+        <div id="modal-content" class="bg-white rounded-lg shadow-2xl p-8 max-w-lg w-full transform -translate-y-10 transition-transform duration-300" onclick="event.stopPropagation()">
+            <h3 id="modal-title" class="text-2xl font-bold text-green-800 mb-4"></h3>
+            <p id="modal-text" class="text-stone-700"></p>
+            <button onclick="closeModal()" class="mt-6 bg-green-700 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-800 transition">ปิด</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const ctx = document.getElementById('maturityChart').getContext('2d');
+            const maturityChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['10', '15', '20', '25', '30', '35', '40'],
+                    datasets: [{
+                        label: 'น้ำหนักแห้ง',
+                        data: [40, 65, 85, 98, 100, 99, 98],
+                        borderColor: 'rgb(202, 138, 4)',
+                        backgroundColor: 'rgba(202, 138, 4, 0.1)',
+                        yAxisID: 'y',
+                        tension: 0.3,
+                        fill: true,
+                    }, {
+                        label: 'ความงอก',
+                        data: [30, 60, 80, 95, 98, 96, 92],
+                        borderColor: 'rgb(22, 163, 74)',
+                        backgroundColor: 'rgba(22, 163, 74, 0.1)',
+                        yAxisID: 'y',
+                        tension: 0.3,
+                    }, {
+                        label: 'ความแข็งแรง',
+                        data: [20, 55, 78, 96, 99, 90, 80],
+                        borderColor: 'rgb(29, 78, 216)',
+                        backgroundColor: 'rgba(29, 78, 216, 0.1)',
+                        yAxisID: 'y',
+                        tension: 0.3,
+                    }, {
+                        label: 'ความชื้นเมล็ด',
+                        data: [60, 50, 40, 30, 25, 22, 20],
+                        borderColor: 'rgb(239, 68, 68)',
+                        yAxisID: 'y1',
+                        borderDash: [5, 5],
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'กราฟแสดงการเจริญเต็มที่ทางสรีรวิทยาของเมล็ดพันธุ์'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += context.parsed.y + '%';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'วันหลังดอกบาน'
+                            }
+                        },
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'เปอร์เซ็นต์สูงสุด'
+                            },
+                            min: 0,
+                            max: 100
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: 'ความชื้น (%)'
+                            },
+                            min: 0,
+                            max: 100,
+                            grid: {
+                                drawOnChartArea: false,
+                            }
+                        }
+                    },
+                    annotation: {
+                        annotations: {
+                            line1: {
+                                type: 'line',
+                                xMin: 4,
+                                xMax: 4,
+                                borderColor: 'rgb(132, 204, 22)',
+                                borderWidth: 2,
+                                borderDash: [6, 6],
+                                label: {
+                                    content: 'Physiological Maturity',
+                                    enabled: true,
+                                    position: 'start'
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            const moistureSlider = document.getElementById('moistureSlider');
+            const tempSlider = document.getElementById('tempSlider');
+            const moistureValue = document.getElementById('moistureValue');
+            const tempValue = document.getElementById('tempValue');
+            const shelfLifeResult = document.getElementById('shelfLifeResult');
+
+            function updateShelfLife() {
+                const moistureReduction = parseInt(moistureSlider.value);
+                const tempReduction = parseInt(tempSlider.value) / 5;
+                moistureValue.textContent = moistureReduction;
+                tempValue.textContent = tempSlider.value;
+                const multiplier = Math.pow(2, moistureReduction + tempReduction);
+                shelfLifeResult.textContent = multiplier;
+            }
+
+            moistureSlider.addEventListener('input', updateShelfLife);
+            tempSlider.addEventListener('input', updateShelfLife);
+            
+            document.querySelectorAll('.accordion-header').forEach(button => {
+                button.addEventListener('click', () => {
+                    const accordionContent = button.nextElementSibling;
+                    const accordionIcon = button.querySelector('.accordion-icon');
+                    
+                    button.parentElement.classList.toggle('open');
+
+                    if (button.parentElement.classList.contains('open')) {
+                        accordionContent.style.maxHeight = accordionContent.scrollHeight + 'px';
+                        accordionIcon.textContent = '-';
+                    } else {
+                        accordionContent.style.maxHeight = '0px';
+                        accordionIcon.textContent = '+';
+                    }
+                });
+            });
+
+            document.querySelectorAll('a.nav-link').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        });
+
+        const modalData = {
+            precleaner: {
+                title: 'เครื่องทำความสะอาดเบื้องต้น (Pre-cleaner)',
+                text: 'ทำหน้าที่กำจัดสิ่งเจือปนที่มีขนาดใหญ่กว่าและเล็กกว่าเมล็ดข้าวอย่างรวดเร็ว เช่น ฟางข้าว, กรวด, หิน, ดิน และทราย เพื่อลดภาระของเครื่องจักรในขั้นตอนต่อไป'
+            },
+            airscreen: {
+                title: 'เครื่องทำความสะอาดแบบใช้ลมและตะแกรง (Air-screen Cleaner)',
+                text: 'เป็นหัวใจของการทำความสะอาด โดยใช้หลักการทำงาน 2 อย่างร่วมกัน: 1) กระแสลม (Aspiration) เป่าแยกสิ่งเจือปนที่เบากว่าเมล็ดออกไป 2) ชุดตะแกรง (Screens) ที่มีรูขนาดต่างๆ กัน จะคัดแยกเมล็ดตามขนาดและความกว้าง'
+            },
+            gravity: {
+                title: 'เครื่องคัดแยกตามความถ่วงจำเพาะ (Gravity Separator)',
+                text: 'ใช้หลักการแยกเมล็ดตามความหนาแน่นหรือน้ำหนัก โดยเมล็ดที่หนักและสมบูรณ์ (มีความถ่วงจำเพาะสูง) จะถูกแยกออกจากเมล็ดที่เบา, ลีบ, หรือถูกแมลงทำลาย (มีความถ่วงจำเพาะต่ำ) ทำให้ได้เมล็ดพันธุ์ที่มีคุณภาพสม่ำเสมอ'
+            }
+        };
+
+        const modalBackdrop = document.getElementById('modal-backdrop');
+        const modalContent = document.getElementById('modal-content');
+        const modalTitle = document.getElementById('modal-title');
+        const modalText = document.getElementById('modal-text');
+
+        function showModal(id) {
+            const data = modalData[id];
+            if (data) {
+                modalTitle.textContent = data.title;
+                modalText.textContent = data.text;
+                modalBackdrop.classList.remove('opacity-0', 'pointer-events-none');
+                modalContent.classList.remove('-translate-y-10');
+            }
+        }
+
+        function closeModal() {
+            modalBackdrop.classList.add('opacity-0', 'pointer-events-none');
+            modalContent.classList.add('-translate-y-10');
+        }
+
+    </script>
+</body>
+</html>
