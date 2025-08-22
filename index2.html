@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เทคโนโลยีเมล็ดพันธุ์ข้าว | Kasetsart University</title>
+    <style>
+        /* * ========================================
+         * General Styling & Variables
+         * ========================================
+         */
+        @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap');
+
+        :root {
+            --ku-green: #006A4E;
+            --ku-yellow: #FFD100;
+            --text-dark: #333;
+            --text-light: #f4f4f4;
+            --bg-light: #ffffff;
+            --bg-gray: #f9f9f9;
+            --shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Kanit', sans-serif;
+            line-height: 1.7;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 0 20px;
+        }
+
+        /* * ========================================
+         * Header & Navigation
+         * ========================================
+         */
+        header {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            color: var(--ku-green);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        .logo span { color: var(--ku-yellow); }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 25px;
+        }
+
+        nav ul li a {
+            color: var(--ku-green);
+            text-decoration: none;
+            font-weight: 600;
+            padding-bottom: 5px;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        nav ul li a:hover, nav ul li a.active {
+            color: #004d38;
+            border-bottom-color: var(--ku-yellow);
+        }
+
+        /* * ========================================
+         * Hero Section
+         * ========================================
+         */
+        #hero {
+            height: 80vh;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1596265331683-10759093424d?auto=format&fit=crop&q=80') no-repeat center center/cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: var(--text-light);
+            padding: 0 20px;
+        }
+
+        #hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+        }
+
+        #hero p {
+            font-size: 1.3rem;
+            max-width: 700px;
+        }
+
+        /* * ========================================
+         * General Section Styling
+         * ========================================
+         */
+        section {
+            padding: 5rem 0;
+        }
+        
+        section:nth-child(even) {
+            background: var(--bg-gray);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: var(--ku-green);
+        }
+
+        /* * ========================================
+         * Botany Section (Interactive List)
+         * ========================================
+         */
+        #botany .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+        #botany img {
+            width: 100%;
+            max-width: 500px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            margin: auto;
+            display: block;
+        }
+        .interactive-list .item {
+            background: var(--bg-light);
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        .interactive-list .item-header {
+            padding: 1rem 1.5rem;
+            background: var(--ku-green);
+            color: var(--text-light);
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+         .interactive-list .item-header .arrow {
+            transition: transform 0.3s ease;
+         }
+        .interactive-list .item-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out, padding 0.5s ease-out;
+            padding: 0 1.5rem;
+        }
+        .interactive-list .item-content p { margin-bottom: 1rem; }
+        .interactive-list .item.active .item-content {
+            max-height: 500px;
+            padding: 1.5rem;
+        }
+        .interactive-list .item.active .arrow {
+            transform: rotate(180deg);
+        }
+
+        /* * ========================================
+         * Quality Section (Cards)
+         * ========================================
+         */
+        #quality .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--bg-light);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .card .icon { font-size: 3rem; color: var(--ku-green); margin-bottom: 1rem; }
+        .card h3 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+
+        /* * ========================================
+         * Process Section (Timeline)
+         * ========================================
+         */
+        .timeline {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: var(--ku-yellow);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+        }
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            background-color: inherit;
+            width: 50%;
+        }
+        .timeline-item::after {
+            content: '🌾';
+            position: absolute;
+            width: 35px;
+            height: 35px;
+            right: -20px;
+            background-color: var(--bg-light);
+            border: 4px solid var(--ku-green);
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1;
+            font-size: 18px;
+            text-align: center;
+            line-height: 28px;
+        }
+        .timeline-left { left: 0; }
+        .timeline-right { left: 50%; }
+        .timeline-left::before, .timeline-right::before {
+            content: " ";
+            height: 0;
+            position: absolute;
+            top: 22px;
+            width: 0;
+            z-index: 1;
+            border: medium solid var(--ku-green);
+        }
+        .timeline-left::before {
+            right: 30px;
+            border-width: 10px 0 10px 10px;
+            border-color: transparent transparent transparent var(--ku-green);
+        }
+        .timeline-right::before {
+            left: 30px;
+            border-width: 10px 10px 10px 0;
+            border-color: transparent var(--ku-green) transparent transparent;
+        }
+        .timeline-right::after { left: -18px; }
+        .timeline-content {
+            padding: 20px 30px;
+            background-color: white;
+            position: relative;
+            border-radius: 6px;
+            box-shadow: var(--shadow);
+        }
+        .timeline-content h3 { color: var(--ku-green); }
+
+        /* * ========================================
+         * Testing Section (Tabs)
+         * ========================================
+         */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        .tab-button {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            background: var(--bg-gray);
+            font-size: 1rem;
+            font-family: 'Kanit', sans-serif;
+            font-weight: 600;
+            margin: 5px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        .tab-button.active, .tab-button:hover {
+            background-color: var(--ku-green);
+            color: white;
+        }
+        .tab-content {
+            display: none;
+            padding: 2rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .tab-content h3 { color: var(--ku-green); margin-bottom: 1rem; }
+        .tab-content .method-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        .method-grid div {
+            background: var(--bg-gray);
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+        
+        /* * ========================================
+         * Storage Section
+         * ========================================
+         */
+        #storage .storage-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 3rem;
+        }
+        #storage h3 {
+            color: var(--ku-green);
+            border-left: 5px solid var(--ku-yellow);
+            padding-left: 1rem;
+            margin-bottom: 1rem;
+        }
+        #storage ul {
+            list-style-type: '✅ ';
+            padding-left: 1.5rem;
+        }
+         #storage .threats ul {
+            list-style-type: '❌ ';
+        }
+        #storage li { padding-left: 10px; margin-bottom: 0.5rem; }
+        
+        /* * ========================================
+         * Footer & Back-to-Top
+         * ========================================
+         */
+        footer {
+            background: var(--text-dark);
+            color: var(--text-light);
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        #back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--ku-green);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 24px;
+            line-height: 50px;
+            cursor: pointer;
+            display: none;
+            transition: opacity 0.3s;
+            z-index: 999;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        /* * ========================================
+         * Responsive Design
+         * ========================================
+         */
+        @media(max-width: 768px) {
+            #hero h1 { font-size: 2.5rem; }
+            #hero p { font-size: 1.1rem; }
+            .section-title { font-size: 2rem; }
+            
+            nav ul { display: none; } /* Simplified for demo */
+
+            #botany .content { grid-template-columns: 1fr; }
+            .timeline::after { left: 31px; }
+            .timeline-item { width: 100%; padding-left: 70px; padding-right: 25px; }
+            .timeline-item::before { left: 60px; border-width: 10px 10px 10px 0; border-color: transparent var(--ku-green) transparent transparent; }
+            .timeline-left::after, .timeline-right::after { left: 15px; }
+            .timeline-right { left: 0%; }
+            .tab-content .method-grid { grid-template-columns: 1fr; }
+            #storage .storage-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header and Navigation Bar -->
+    <header>
+        <div class="container">
+            <div class="logo">KU<span>AGRO</span></div>
+            <nav>
+                <ul>
+                    <li><a href="#hero" class="active">หน้าแรก</a></li>
+                    <li><a href="#botany">พฤกษศาสตร์</a></li>
+                    <li><a href="#quality">คุณภาพเมล็ดพันธุ์</a></li>
+                    <li><a href="#process">กระบวนการผลิต</a></li>
+                    <li><a href="#testing">การตรวจสอบ</a></li>
+                    <li><a href="#storage">การเก็บรักษา</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="hero">
+            <h1>เทคโนโลยีเมล็ดพันธุ์ข้าว</h1>
+            <p>แหล่งเรียนรู้แบบ Interactive สำหรับนิสิตคณะเกษตร มหาวิทยาลัยเกษตรศาสตร์</p>
+        </section>
+
+        <!-- Botany Section -->
+        <section id="botany">
+            <div class="container">
+                <h2 class="section-title">🔬 พฤกษศาสตร์ของเมล็ดข้าว</h2>
+                <div class="content">
+                    <img src="https://cdn.britannica.com/22/622-004-317E2BA5/layers-structures-rice-grain.jpg" alt="แผนภาพโครงสร้างเมล็ดข้าว">
+                    <div class="interactive-list">
+                        <div class="item">
+                            <div class="item-header">ส่วนห่อหุ้ม (Covering Parts) <span class="arrow">▼</span></div>
+                            <div class="item-content"><p>ประกอบด้วยเปลือกนอก (Hull/Husk) ซึ่งทำจาก lemma และ palea ป้องกันอันตรายทางกายภาพ ถัดเข้าไปเป็นผนังผล (Pericarp) และเยื่อหุ้มเมล็ด (Testa)</p></div>
+                        </div>
+                         <div class="item">
+                            <div class="item-header">ส่วนสะสมอาหาร (Storage Part) <span class="arrow">▼</span></div>
+                            <div class="item-content"><p>คือ เอนโดสเปิร์ม (Endosperm) หรือส่วนของข้าวสาร ประกอบด้วยคาร์โบไฮเดรตเป็นหลัก ถูกห่อหุ้มด้วยชั้นอะลูโรน (Aleurone Layer) ซึ่งมีโปรตีนสูงและมีบทบาทสำคัญในการงอก</p></div>
+                        </div>
+                         <div class="item">
+                            <div class="item-header">คัพภะ (Embryo) <span class="arrow">▼</span></div>
+                            <div class="item-content"><p>ส่วนที่มีชีวิตของเมล็ด ประกอบด้วยแกนต้นอ่อน (Embryonic Axis) ที่จะเจริญไปเป็นยอดแรกเกิด (Plumule) และรากแรกเกิด (Radicle) และมีใบเลี้ยง (Scutellum) ทำหน้าที่ส่งผ่านอาหาร</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quality Section -->
+        <section id="quality">
+            <div class="container">
+                <h2 class="section-title">🌱 6 เสาหลักคุณภาพเมล็ดพันธุ์</h2>
+                <div class="cards-container">
+                    <div class="card">
+                        <div class="icon">🧬</div>
+                        <h3>ความตรงตามพันธุ์</h3>
+                        <p>มีลักษณะทางพันธุกรรมตรงตามสายพันธุ์ที่ระบุไว้ เพื่อความสม่ำเสมอของผลผลิต</p>
+                    </div>
+                    <div class="card">
+                        <div class="icon">✨</div>
+                        <h3>ความบริสุทธิ์</h3>
+                        <p>ปราศจากสิ่งเจือปน เช่น กรวด ดิน ทราย และเมล็ดพืชอื่นๆ</p>
+                    </div>
+                    <div class="card">
+                        <div class="icon">📈</div>
+                        <h3>ความงอกสูง</h3>
+                        <p>มีเปอร์เซ็นต์การงอกสูงและสม่ำเสมอ เป็นหัวใจของการตั้งตัวของพืช</p>
+                    </div>
+                    <div class="card">
+                        <div class="icon">💪</div>
+                        <h3>ความแข็งแรงสูง</h3>
+                        <p>สามารถงอกและเจริญเป็นต้นกล้าที่สมบูรณ์ได้ดี แม้ในสภาพแวดล้อมที่ไม่เหมาะสม</p>
+                    </div>
+                    <div class="card">
+                        <div class="icon">🛡️</div>
+                        <h3>ปราศจากโรค</h3>
+                        <p>ต้องไม่มีโรคติดมากับเมล็ด ซึ่งเป็นสาเหตุการระบาดในแปลงปลูก</p>
+                    </div>
+                    <div class="card">
+                        <div class="icon">💧</div>
+                        <h3>ความชื้นเหมาะสม</h3>
+                        <p>เป็นปัจจัยสำคัญที่สุดต่ออายุการเก็บรักษา ต้องควบคุมให้อยู่ในระดับที่ปลอดภัย</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Process Section -->
+        <section id="process">
+            <div class="container">
+                <h2 class="section-title">🏭 กระบวนการผลิตและปรับปรุงสภาพ</h2>
+                <div class="timeline">
+                    <div class="timeline-item timeline-left">
+                        <div class="timeline-content">
+                            <h3>1. การเก็บเกี่ยว (Harvesting)</h3>
+                            <p>เก็บเกี่ยวในระยะเหมาะสม (28-30 วันหลังออกดอก) เพื่อให้ได้เมล็ดพันธุ์ที่มีความสมบูรณ์และแข็งแรงสูงสุด</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item timeline-right">
+                        <div class="timeline-content">
+                            <h3>2. การลดความชื้น (Drying)</h3>
+                            <p>ลดความชื้นจาก 18-24% ให้เหลือไม่เกิน 12% เพื่อการเก็บรักษาที่ยาวนาน สามารถทำได้โดยการตากแดด (Natural) หรือใช้เครื่องอบ (Artificial)</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item timeline-left">
+                        <div class="timeline-content">
+                            <h3>3. ทำความสะอาด (Cleaning)</h3>
+                            <p>ทำความสะอาดเบื้องต้นเพื่อกำจัดสิ่งเจือปนขนาดใหญ่ เช่น เศษฟาง ใบไม้</p>
+                        </div>
+                    </div>
+                     <div class="timeline-item timeline-right">
+                        <div class="timeline-content">
+                            <h3>4. คัดแยกและปรับปรุง (Grading)</h3>
+                            <p>ใช้เครื่องมือคัดแยกเมล็ดตามขนาด ความหนา และน้ำหนัก เพื่อให้ได้เมล็ดพันธุ์ที่มีคุณภาพสม่ำเสมอ</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item timeline-left">
+                        <div class="timeline-content">
+                            <h3>5. คลุกสารเคมี (Treatment)</h3>
+                            <p>อาจมีการคลุกสารเคมีเพื่อป้องกันเชื้อราและแมลง แต่ผู้ผลิตเชิงพาณิชย์มักหลีกเลี่ยงขั้นตอนนี้</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item timeline-right">
+                        <div class="timeline-content">
+                            <h3>6. บรรจุ (Packaging)</h3>
+                            <p>บรรจุในภาชนะที่เหมาะสมเพื่อป้องกันความชื้น ความเสียหาย และสะดวกต่อการขนส่ง</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testing Section -->
+        <section id="testing">
+             <div class="container">
+                <h2 class="section-title">⚖️ การตรวจสอบคุณภาพ</h2>
+                <div class="tabs">
+                    <button class="tab-button active" data-tab="tab1">ความชื้น</button>
+                    <button class="tab-button" data-tab="tab2">ความบริสุทธิ์</button>
+                    <button class="tab-button" data-tab="tab3">ความงอก</button>
+                    <button class="tab-button" data-tab="tab4">พันธุ์ปน/ข้าวแดง</button>
+                </div>
+
+                <div id="tab1" class="tab-content active">
+                    <h3>การตรวจสอบความชื้น (Moisture Test)</h3>
+                    <div class="method-grid">
+                        <div>
+                            <h4>วิธีมาตรฐาน (Direct Method)</h4>
+                            <p>เป็นวิธีที่แม่นยำที่สุด โดยการอบตัวอย่างเมล็ดในตู้อบลมร้อน (Hot Air Oven) ที่อุณหภูมิและเวลามาตรฐาน แล้วคำนวณเปอร์เซ็นต์ความชื้นจากน้ำหนักที่หายไป</p>
+                        </div>
+                        <div>
+                            <h4>วิธีทางอ้อม (Indirect Method)</h4>
+                            <p>เป็นวิธีที่รวดเร็ว ใช้เครื่องวัดไฟฟ้าที่อาศัยหลักการความต้านทาน (Resistance) หรือความจุไฟฟ้า (Capacitance) ของเมล็ด เช่น เครื่อง EE-KU ของ ม.เกษตรศาสตร์</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="tab2" class="tab-content">
+                    <h3>การตรวจสอบความบริสุทธิ์ (Purity Test)</h3>
+                    <p>สุ่มตัวอย่างเมล็ดตามมาตรฐาน (Working sample) แล้วแยกองค์ประกอบ 3 ส่วน เพื่อนนำไปชั่งน้ำหนักคำนวณเปอร์เซ็นต์:</p>
+                    <ul>
+                        <li><b>เมล็ดพันธุ์บริสุทธิ์ (Pure seed)</b>: เมล็ดของพืชพันธุ์ที่ต้องการตรวจสอบ</li>
+                        <li><b>เมล็ดพืชชนิดอื่น (Other seed)</b>: เมล็ดของพืชชนิดอื่นหรือพันธุ์อื่น</li>
+                        <li><b>สิ่งเจือปน (Inert matter)</b>: วัสดุอื่นๆ ที่ไม่ใช่เมล็ด เช่น กรวด ดิน แกลบ</li>
+                    </ul>
+                </div>
+                <div id="tab3" class="tab-content">
+                    <h3>การตรวจสอบความงอก (Germination Test)</h3>
+                    <p>เป็นการประเมินศักยภาพของเมล็ดในการงอกเป็นต้นกล้าที่ปกติและสมบูรณ์ภายใต้สภาวะที่เหมาะสมในห้องปฏิบัติการ สำหรับเมล็ดข้าวที่เพิ่งเก็บเกี่ยวใหม่และมีการพักตัว (Dormancy) จะต้องผ่านกระบวนการทำลายการพักตัวก่อน เช่น การอบที่อุณหภูมิ 50°C เป็นเวลา 5-7 วัน</p>
+                </div>
+                <div id="tab4" class="tab-content">
+                    <h3>การตรวจสอบพันธุ์ปนและข้าวแดง</h3>
+                    <p>เป็นข้อกำหนดทางกฎหมายเพื่อควบคุมคุณภาพเมล็ดพันธุ์</p>
+                     <div class="method-grid">
+                        <div>
+                            <h4>ข้าวแดง (Red Rice)</h4>
+                            <p>สุ่มตัวอย่าง 500 กรัม นำไปกะเทาะเปลือก แล้วตรวจนับจำนวนเมล็ดข้าวที่มีเยื่อหุ้มเมล็ดสีแดง ตามมาตรฐานชั้นพันธุ์จำหน่ายต้องไม่เกิน 10 เมล็ดต่อ 500 กรัม</p>
+                        </div>
+                        <div>
+                            <h4>ข้าวพันธุ์อื่นปน (Other Cultivars)</h4>
+                            <p>ตรวจสอบเมล็ดพันธุ์อื่นที่ปะปนมาในตัวอย่าง 500 กรัม สามารถจำแนกด้วยสายตาโดยผู้เชี่ยวชาญ หรือใช้วิธีทางชีวเคมี เช่น UTLIEF เพื่อเพิ่มความแม่นยำ</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Storage Section -->
+        <section id="storage">
+            <div class="container">
+                <h2 class="section-title">📦 การเก็บรักษาเมล็ดพันธุ์</h2>
+                <p style="text-align: center; max-width: 800px; margin: 0 auto 3rem auto;">หัวใจสำคัญของการเก็บรักษาคือการควบคุมปัจจัยแวดล้อมเพื่อชะลอการเสื่อมคุณภาพของเมล็ดพันธุ์ให้ได้นานที่สุด หลักการคือ "เย็นและแห้ง"</p>
+                <div class="storage-grid">
+                    <div class="principles">
+                        <h3>หลักการสำคัญ 3 ประการ</h3>
+                         <ul>
+                            <li><b>ความชื้นสัมพัทธ์ต่ำ</b></li>
+                            <li><b>อุณหภูมิต่ำ</b></li>
+                            <li><b>ออกซิเจนต่ำ</b></li>
+                        </ul>
+                    </div>
+                    <div class="threats">
+                         <h3>สิ่งที่ต้องป้องกันในโรงเก็บ</h3>
+                         <ul>
+                             <li>น้ำและความชื้น</li>
+                             <li>หนูและสัตว์ฟันแทะ</li>
+                             <li>แมลงศัตรูในโรงเก็บ</li>
+                             <li>เชื้อราที่สร้างสารพิษ</li>
+                         </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Kasetsart University, Faculty of Agriculture. All rights reserved.</p>
+            <p>สร้างสรรค์เพื่อการศึกษาโดยอ้างอิงข้อมูลจากภาควิชาพืชไร่นา</p>
+        </div>
+    </footer>
+    
+    <!-- Back to Top Button -->
+    <div id="back-to-top">▲</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- Navigation Active State on Scroll ---
+            const navLinks = document.querySelectorAll('nav ul li a');
+            const sections = document.querySelectorAll('main section');
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.5
+            };
+
+            const sectionObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href').substring(1) === entry.target.id) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => {
+                sectionObserver.observe(section);
+            });
+
+
+            // --- Interactive List (Botany Section) ---
+            const items = document.querySelectorAll('.interactive-list .item');
+            items.forEach(item => {
+                const header = item.querySelector('.item-header');
+                header.addEventListener('click', () => {
+                    // Close other items if you want only one open at a time
+                    items.forEach(otherItem => {
+                        if (otherItem !== item && otherItem.classList.contains('active')) {
+                            otherItem.classList.remove('active');
+                        }
+                    });
+                    // Toggle the clicked item
+                    item.classList.toggle('active');
+                });
+            });
+
+            // --- Tabs (Testing Section) ---
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+
+                    tabContents.forEach(content => {
+                        content.classList.remove('active');
+                        if (content.id === button.dataset.tab) {
+                            content.classList.add('active');
+                        }
+                    });
+                });
+            });
+            
+            // --- Back to Top Button ---
+            const backToTopButton = document.getElementById('back-to-top');
+            window.addEventListener('scroll', () => {
+                if (window.pageYOffset > 300) {
+                    backToTopButton.style.display = 'block';
+                } else {
+                    backToTopButton.style.display = 'none';
+                }
+            });
+
+            backToTopButton.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+    </script>
+
+</body>
+</html>
